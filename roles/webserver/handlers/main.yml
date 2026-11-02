@@ -1,0 +1,7 @@
+---
+# Draait alleen als een taak echt iets heeft veranderd
+
+- name: Apache herladen
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded

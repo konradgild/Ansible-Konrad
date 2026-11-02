@@ -1,0 +1,5 @@
+---
+# Extra collectie voor de MariaDB-taken
+# Installeren met: ansible-galaxy collection install -r collections/requirements.yml
+collections:
+  - name: community.mysql

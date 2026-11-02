@@ -1,0 +1,7 @@
+---
+# Variabelen voor de databaseserver (Debian)
+
+db_packages:
+  - mariadb-server
+  # nodig voor de Ansible mysql-modules
+  - python3-pymysql

@@ -1,0 +1,38 @@
+---
+# Maakt van de server een databaseserver met MariaDB
+
+- name: MariaDB installeren
+  ansible.builtin.apt:
+    name: "{{ db_packages }}"
+    state: present
+
+- name: MariaDB starten en aanzetten na een reboot
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: MariaDB laten luisteren op het netwerk (niet alleen localhost)
+  ansible.builtin.template:
+    src: 60-konrad.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/60-konrad.cnf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: MariaDB herstarten
+
+- name: Database voor de website aanmaken
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: Database-gebruiker aanmaken die alleen vanaf de webserver mag inloggen
+  community.mysql.mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: "{{ hostvars[item].ansible_host }}"
+    priv: "{{ db_name }}.*:ALL"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+  loop: "{{ groups['webservers'] }}"

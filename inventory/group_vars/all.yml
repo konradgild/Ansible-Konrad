@@ -1,0 +1,20 @@
+---
+# Variabelen voor alle servers
+
+# Inloggen met mijn eigen account en mijn eigen SSH-key
+ansible_user: konrad
+ansible_ssh_private_key_file: ~/.ssh/konrad_ansible
+
+eigenaar: "Konrad Sawicki"
+
+# Deze pakketten komen op elke server
+common_packages:
+  - curl
+  - vim
+  - htop
+  - tree
+
+# Database-gegevens (de webserver en de databaseserver hebben ze allebei nodig)
+db_name: konrad_db
+db_user: konrad_web
+db_password: "Konrad2026!"

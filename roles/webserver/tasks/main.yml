@@ -1,0 +1,29 @@
+---
+# Maakt van de server een webserver met Apache en PHP
+
+- name: Apache en PHP installeren
+  ansible.builtin.apt:
+    name: "{{ web_packages }}"
+    state: present
+
+- name: Apache starten en aanzetten na een reboot
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
+
+- name: ServerName-instelling voor Apache plaatsen
+  ansible.builtin.template:
+    src: servername.conf.j2
+    dest: /etc/apache2/conf-available/servername.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Apache herladen
+
+- name: ServerName-instelling aanzetten
+  ansible.builtin.file:
+    src: /etc/apache2/conf-available/servername.conf
+    dest: /etc/apache2/conf-enabled/servername.conf
+    state: link
+  notify: Apache herladen

@@ -1,0 +1,38 @@
+---
+# Zet mijn PHP-website op de webserver
+
+- name: Standaard Apache-pagina weghalen
+  ansible.builtin.file:
+    path: "{{ web_root }}/index.html"
+    state: absent
+
+- name: Websitebestanden uploaden
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ web_root }}/{{ item }}"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+  loop:
+    - index.php
+    - style.css
+
+- name: Database-instellingen voor de website plaatsen
+  ansible.builtin.template:
+    src: config.php.j2
+    dest: "{{ web_root }}/config.php"
+    owner: www-data
+    group: www-data
+    # alleen Apache mag dit lezen, er staat een wachtwoord in
+    mode: "0640"
+
+- name: Controleren of de website het doet
+  ansible.builtin.uri:
+    url: "http://{{ hostvars[inventory_hostname].ansible_host }}/"
+    return_content: true
+  register: pagina
+  failed_when: "'Konrad' not in pagina.content"
+  delegate_to: localhost
+  become: false
+  # in check mode staat de site er nog niet echt op
+  when: not ansible_check_mode

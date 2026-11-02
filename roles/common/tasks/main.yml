@@ -1,0 +1,31 @@
+---
+# Taken die op elke server hetzelfde zijn (zo staat er geen dubbele code in de andere roles)
+
+- name: Package cache bijwerken
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Basispakketten installeren
+  ansible.builtin.apt:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: Hostname instellen (naam uit de inventory)
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Alle servers in /etc/hosts zetten
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '\s{{ item }}$'
+    line: "{{ hostvars[item].ansible_host }} {{ item }}"
+  loop: "{{ groups['all'] }}"
+
+- name: Welkomstbericht met mijn naam plaatsen
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"
