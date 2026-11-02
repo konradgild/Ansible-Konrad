@@ -1,0 +1,9 @@
+---
+# Aparte play: zet de PHP-website op de webserver
+# Kan ook los gestart worden: ansible-playbook website.yml
+
+- name: PHP-website uploaden naar de webserver
+  hosts: webservers
+  become: true
+  roles:
+    - website

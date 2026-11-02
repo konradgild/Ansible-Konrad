@@ -1,0 +1,4 @@
+# Nooit mijn private key in Git zetten
+*.pem
+konrad_ansible
+*.retry

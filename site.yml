@@ -1,0 +1,25 @@
+---
+# Hoofd-playbook van Konrad Sawicki
+# Starten met: ansible-playbook site.yml
+
+- name: Basis voor alle servers
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Webserver inrichten
+  hosts: webservers
+  become: true
+  roles:
+    - webserver
+
+- name: Databaseserver inrichten
+  hosts: databases
+  become: true
+  roles:
+    - database
+
+# De website staat in een aparte play (website.yml)
+- name: PHP-website uploaden
+  ansible.builtin.import_playbook: website.yml
