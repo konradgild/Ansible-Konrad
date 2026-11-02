@@ -1,4 +1,4 @@
-# Ansible (web)serverrollen – Konrad Sawicki
+# Ansible (web)serverrollen – Konrad
 
 Met dit Ansible-project maak ik van twee kale Linux-servers een **webserver** (Apache + PHP) en een **databaseserver** (MariaDB). In een aparte play wordt daarna een PHP-website op de webserver gezet. De website praat met de database en telt hoe vaak de pagina is bezocht.
 
